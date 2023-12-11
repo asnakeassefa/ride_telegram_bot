@@ -146,8 +146,9 @@ async def profile(message:Message,state:FSMContext) -> None:
 
 @router.message(Form.edit_p, F.text.casefold() == 'edit')
 async def profile(message:Message,state:FSMContext) -> None:
-    await state.set_state(Form.name)
-    await get_name(message,state)
+    redis_conn.delete(message.from_user.id)
+    await state.set_state(Form.start)
+    await starter(message,state)
 
 #passanger
 @router.message(Form.passenger, F.text.casefold() == 'book')
@@ -286,8 +287,9 @@ async def profile(message:Message,state:FSMContext) -> None:
 @router.message(Form.edit_d, F.text.casefold() == 'edit')
 async def profile(message:Message,state:FSMContext) -> None:
     await message.answer("Editing your profile")
-    await state.set_state(Form.name)
-    await get_name(message,state)
+    redis_conn.delete(message.from_user.id)
+    await state.set_state(Form.start)
+    await starter(message,state)
 
 async def main():
     bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
